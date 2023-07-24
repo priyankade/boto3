@@ -51,17 +51,20 @@ def lambda_handler(event, context):
     deregistered_ami = []
     for ami in all_images:
         if ami not in used_ami:
-            print("Deregistering unused amis: {}".format(ami))
+            print("AMI marked for degistration: {}".format(ami))
 
-            ec2.deregister_image( ImageId=ami,
-                                        DryRun=True
+            ec2.deregister_image( ImageId=ami
+                                        # DryRun=True
                                     )
-
+            print("AMI deregistered: {}".format(ami))
             deregistered_ami.append(ami)
+        else:
+            print("No AMI for deregistration")
         
     #SNS
+    print("triggered")
     sns.publish(
-                        TopicArn='arn:aws:sns:us-east-1:************:Notify-unused-AMI',
+                        TopicArn='arn:aws:sns:us-east-1:406286632660:Notify-unused-AMI',
                         Subject='Alert - Unused AMI deregistered',
                         Message=str(deregistered_ami)
                     ) 
