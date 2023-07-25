@@ -21,8 +21,7 @@ def lambda_handler(event, context):
     #used ami ID list
     used_ami = list(set(used_ami))
 
-    #  print(f"The used amis are: {used_ami}")
-    #  print("check")
+    print("Used AMI IDs (do not delete these) : {}".format(used_ami))
 
     ###Finding all available images list
     available_images = ec2.describe_images(
@@ -38,20 +37,20 @@ def lambda_handler(event, context):
                         'self',
                     ]
                 )
-    # print("All available images : {}".format(available_images))
+    print("All available AMIs : {}".format(available_images))
 
     #available ami ID list
     all_images = []
     for image in available_images['Images']:
         all_images.append(image['ImageId'])
 
-    print("All available images IDs : {}".format(all_images))
+    print("All available AMI IDs : {}".format(all_images))
 
     #Deregistering unused amis
     deregistered_ami = []
     for ami in all_images:
         if ami not in used_ami:
-            print("AMI marked for degistration: {}".format(ami))
+            print("Unused AMI marked for degistration: {}".format(ami))
 
             ec2.deregister_image( ImageId=ami
                                         # DryRun=True
@@ -59,7 +58,7 @@ def lambda_handler(event, context):
             print("AMI deregistered: {}".format(ami))
             deregistered_ami.append(ami)
         else:
-            print("No AMI for deregistration")
+            print("Used AMI not degistered: {}".format(ami))
         
     #SNS
     print("triggered")
