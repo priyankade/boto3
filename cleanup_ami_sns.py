@@ -63,7 +63,7 @@ def lambda_handler(event, context):
     #SNS
     print("triggered")
     sns.publish(
-                        TopicArn='arn:aws:sns:us-east-1:406286632660:Notify-unused-AMI',
+                        TopicArn='arn:aws:sns:us-east-1:************:Notify-unused-AMI',
                         Subject='Alert - Unused AMI deregistered',
                         Message=str(deregistered_ami)
                     ) 
